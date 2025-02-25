@@ -26,3 +26,4 @@ int main() {
 		what.clear();
 	}
 }
+//벡터에 추가하고 반복문으로 cnt
