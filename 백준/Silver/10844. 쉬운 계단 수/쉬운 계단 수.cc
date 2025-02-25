@@ -29,3 +29,4 @@ int main() {
   }
   cout<<ans%mod;
 }
+//기본적인 DP문제
