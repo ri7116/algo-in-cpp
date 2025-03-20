@@ -1,92 +1,52 @@
-
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
-
 int n;
-int arr[15];
-int num[15];
-vector<pair<int,int>> tmp;// 사용유무, 연산자(11 22 33 44 + - * /)
-int _min=+2100000000;
-int _max=-2100000000;
-int cnt;
-void fuc(int k){
-  if(k==n-1){
-    // cout<<"완성\n";
-    // cout<<"num :";
-    // for(int i=0;i<n;i++){
-    //   cout<<num[i]<<" ";
-    // }
-    // cout<<endl;
-    // cout<<"arr :";
-    // for(int i=0;i<n;i++){
-    //   cout<<arr[i]<<" ";
-    // }
-    // cout<<endl;
-    int cur=num[0];
-    for(int i=0;i<n-1;i++){
-      if(arr[i]==11){
-        //cout<<"더하기\n";        
-        cur=cur+num[i+1];
-      }
-      if(arr[i]==22){
-        //cout<<"빼기\n";
-        cur=cur-num[i+1];
-      }
-      if(arr[i]==33){
-        //cout<<"곰셈\n";       
-        //cout<<cur<<'\n';
-        cur=cur*num[i+1];
-        //cout<<num[2+(2*i)];
-      }
-      if(arr[i]==44){
-        //cout<<"나누기 \n";
-        cur=cur/num[i+1];
-      }
-    }
-    //cout<<cur<<endl;
-    if(cur>_max) _max=cur;
-    if(cur<_min) _min=cur;
-  }
+int num[100];
+int arr[100];
+int start[4];
+int cnt[4];
+int max1=-9876543210;
+int min1=9876543210;
 
-  for(int i=0;i<n-1;i++){
-    if(!tmp[i].first){
-      arr[k]=tmp[i].second;
-      tmp[i].first=1;
-      fuc(k+1);
-      tmp[i].first=0;
+void fuc(int depth){
+    if(depth==n-1){
+        int tmp=num[0];
+        for(int i=0;i<n-1;i++){
+            if(arr[i]==0)   tmp+=num[i+1];
+            if(arr[i]==1)   tmp-=num[i+1];
+            if(arr[i]==2)   tmp*=num[i+1];
+            if(arr[i]==3)   tmp/=num[i+1];
+            
+        }
+        // for(int i=0;i<n-1;i++){
+        //     cout<<arr[i]<<" ";
+        // }
+        // cout<<endl;
+        if(tmp>max1) max1=tmp;
+        if(tmp<min1) min1=tmp;
+        //cout<<"1";
+        return;
     }
-  }
+    for(int i=0;i<4;i++){
+        if(cnt[i]+1>start[i]) continue;
+        cnt[i]++;
+        arr[depth]=i;
+        fuc(depth+1);
+        cnt[i]--;
+    }
 }
 
-int main(void){
-  ios::sync_with_stdio(0);
-  cin.tie(0);
-  cin >> n;
-  for(int i=0;i<n;i++){
-    cin>>num[i];
-  }  
-  // for(int i=0;i<n;i++){
-  //   cout<<num[i]<<" "<<endl;
-  // }
-  int a,b,c,d;
-  cin>>a>>b>>c>>d;
-  for(int i=0;i<a;i++){
-    cnt++;
-    tmp.push_back({0,11});
-  }
-  for(int i=0;i<b;i++){
-    cnt++;
-    tmp.push_back({0,22});
-  }
-  for(int i=0;i<c;i++){
-    cnt++;
-    tmp.push_back({0,33});
-  }
-  for(int i=0;i<d;i++){
-    cnt++;
-    tmp.push_back({0,44});
-  }
-  fuc(0);
-  cout<<_max<<'\n';
-  cout<<_min;
+int main(){
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>num[i];
+    }
+    for(int i=0;i<4;i++){
+        cin>>start[i];
+    }
+    fuc(0);
+    cout<<max1<<endl;
+    cout<<min1<<endl;
+
 }
+//1. 
