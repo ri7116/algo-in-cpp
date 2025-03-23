@@ -38,7 +38,7 @@ int main() {
       bit=0;
     }
     if (str == "all") {
-      bit=0xffffff;//0b가 아님???(24bit)
+      bit=0b1111111111111111111111;//0b가 아님???(24bit)
     }
   }
 }
