@@ -31,7 +31,7 @@ int main(){
             if(d[i][j]!=0) continue;
             d[i][j]=d[i-1][j]+d[i][j-1];
             cnt++;
-            if(cnt==k-1){
+            if(cnt==k){
                 int hang=k/m;
                 int yal=k%m;
                 for(int ii=yal;ii<m;ii++){
@@ -43,11 +43,11 @@ int main(){
             }
         }
     }
-    // for(int i=0;i<n;i++){
-    //     for(int j=0;j<m;j++){
-    //         cout<<d[i][j];
-    //     }
-    //     cout<<endl;
-    // }
+     for(int i=0;i<n;i++){
+         for(int j=0;j<m;j++){
+             //cout<<d[i][j]<<" ";
+         }
+         //<<endl;
+     }
     cout<<d[n-1][m-1];
 }
