@@ -1,101 +1,44 @@
-#include<bits/stdc++.h>
+#include <iostream>
+#include <vector>
+
 using namespace std;
-int arr[104][104];
-int arr2[104][104];
-int visited[104][104];
-int visited2[104][104];
-int l, n;
-int ans;
+
+int n, l, answer=0;
+
+void checkRoad(int row, vector<vector<int> >& board) {
+	int prev = board[row][0];
+	vector<bool> slope(n, false);
+	for (int col=1; col<n; col++) {
+		if (abs(prev - board[row][col]) > 1) return ;// 1보다 크면
+
+		if (prev < board[row][col]) {// 오르막 길 일때
+			for (int i=col-l; i<col; i++) {
+				if (i < 0 || slope[i]) return ;// 이미 경사로를 놓았다면 길이아님
+				slope[i] = true;
+			}
+		} else if (prev > board[row][col]) {// 내리막 길 일때
+			for (int i=col; i<col+l; i++) {
+				if (i >= n || slope[i]) return ;//이미 경사로를 놓았다면 길이아님
+				slope[i] = true;
+			}
+		}
+		prev = board[row][col];
+	}
+	answer++;
+}
 
 int main() {
-    cin >> n >> l;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            cin >> arr[i][j];
-            arr2[j][i] = arr[i][j]; // arr2는 열 기준
-        }
-    }
-
-    // 행 검사
-    for (int i = 0; i < n; i++) {
-        memset(visited[i], 0, sizeof(visited[i])); // visited 초기화
-        int flag = 1;
-
-        for (int j = 1; j < n; j++) {
-            if (arr[i][j] == arr[i][j - 1]) continue;
-            if (abs(arr[i][j] - arr[i][j - 1]) > 1) {
-                flag = 0;
-                break;
-            }
-            // 오르막 (현재가 더 높음)
-            if (arr[i][j] - arr[i][j - 1] == 1) {
-                bool ok = true;
-                for (int k = 0; k < l; k++) {
-                    int idx = j - 1 - k;
-                    if (idx < 0 || arr[i][idx] != arr[i][j - 1] || visited[i][idx]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) { flag = 0; break; }
-                for (int k = 0; k < l; k++) visited[i][j - 1 - k] = 1;
-            }
-            // 내리막 (현재가 더 낮음)
-            else if (arr[i][j - 1] - arr[i][j] == 1) {
-                bool ok = true;
-                for (int k = 0; k < l; k++) {
-                    int idx = j + k;
-                    if (idx >= n || arr[i][idx] != arr[i][j] || visited[i][idx]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) { flag = 0; break; }
-                for (int k = 0; k < l; k++) visited[i][j + k] = 1;
-            }
-        }
-        if (flag) ans++;
-    }
-
-    // 열 검사
-    for (int i = 0; i < n; i++) {
-        memset(visited2[i], 0, sizeof(visited2[i]));
-        int flag = 1;
-
-        for (int j = 1; j < n; j++) {
-            if (arr2[i][j] == arr2[i][j - 1]) continue;
-            if (abs(arr2[i][j] - arr2[i][j - 1]) > 1) {
-                flag = 0;
-                break;
-            }
-            // 오르막 (현재가 더 높음)
-            if (arr2[i][j] - arr2[i][j - 1] == 1) {
-                bool ok = true;
-                for (int k = 0; k < l; k++) {
-                    int idx = j - 1 - k;
-                    if (idx < 0 || arr2[i][idx] != arr2[i][j - 1] || visited2[i][idx]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) { flag = 0; break; }
-                for (int k = 0; k < l; k++) visited2[i][j - 1 - k] = 1;
-            }
-            // 내리막 (현재가 더 낮음)
-            else if (arr2[i][j - 1] - arr2[i][j] == 1) {
-                bool ok = true;
-                for (int k = 0; k < l; k++) {
-                    int idx = j + k;
-                    if (idx >= n || arr2[i][idx] != arr2[i][j] || visited2[i][idx]) {
-                        ok = false;
-                        break;
-                    }
-                }
-                if (!ok) { flag = 0; break; }
-                for (int k = 0; k < l; k++) visited2[i][j + k] = 1;
-            }
-        }
-        if (flag) ans++;
-    }
-    cout << ans;
+	cin >> n >> l;
+	vector<vector<int> > board(n, vector<int>(n)), board_rotated(n, vector<int>(n));
+	for (int i=0; i<n; i++) {
+		for (int j=0; j<n; j++) {
+			cin >> board[i][j];
+			board_rotated[j][i] = board[i][j];
+		}
+	}
+	for (int i=0; i<n; i++) {
+		checkRoad(i, board);// 행
+		checkRoad(i, board_rotated);// 열
+	}
+	cout << answer << "\n";
 }
