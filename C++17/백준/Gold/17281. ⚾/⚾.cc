@@ -10,54 +10,103 @@ void dfs(int depth){
     if(depth==10){
         int tmp=0;
         taza=0;
+        
+        // for(int i=1;i<=9;i++){
+        //     cout<<Map[i][1]<<" ";
+        // }
+        // cout<<endl;
+
         for(int i=1;i<=n;i++){//이닝
             int cnt=0;
             //루 초기화
             for(int j=1;j<=9;j++){
                 Map[j][2]=0;
             }
+            //이닝 시작 알림
+            
+            // cout<<"ening start \n";
+
 
             while(1){
                 taza++;
                 if(taza>=10) taza=taza-9;
+                
+                //cout<<taza<<" gogogogo\n";
+                
+                if(ening_map[i][Map[taza][1]]==1){ // 1루타
+                    // 3루에 있던 주자는 득점
+                    for(int k=1; k<=9; k++) if(Map[k][2] == 3) { Map[k][2] = 4; }
+                    // 2루에 있던 주자는 3루로
+                    for(int k=1; k<=9; k++) if(Map[k][2] == 2) { Map[k][2] = 3; }
+                    // 1루에 있던 주자는 2루로
+                    for(int k=1; k<=9; k++) if(Map[k][2] == 1) { Map[k][2] = 2; }
+                    
+                    // 타자는 1루로
+                    Map[taza][2] = 1;
 
-                int hit = ening_map[i][Map[taza][1]];
-
-                if(hit == 0){ // 아웃
-                    cnt++;
-                    if(cnt >= 3) break;
-                    continue;
-                }
-
-                // 안타 또는 홈런:
-                // 1. 현재 주자 위치를 백업하고, 맵을 깨끗하게 비운다.
-                int current_bases[10] = {0};
-                for(int k=1; k<=9; k++){
-                    current_bases[k] = Map[k][2];
-                    Map[k][2] = 0; // 베이스를 비운다
-                }
-
-                // 2. 백업된 정보로 모든 주자를 진루시킨다.
-                for(int k=1; k<=9; k++){
-                    if(current_bases[k] > 0){ // k번째 타순의 선수가 주자로 있었다면
-                        int new_pos = current_bases[k] + hit;
-                        if(new_pos >= 4){
-                            tmp++; // 득점
-                        } else {
-                            Map[k][2] = new_pos; // 새로운 위치로 이동
+                    // 점수 계산 및 베이스 정리
+                    for(int k=1; k<=9; k++){
+                        if(Map[k][2] >= 4) {
+                            tmp++;
+                            Map[k][2] = 0;
                         }
                     }
                 }
+                if(ening_map[i][Map[taza][1]]==2){ // 2루타
+                    // 3루, 2루 주자는 득점
+                    for(int k=1; k<=9; k++) if(Map[k][2] == 3 || Map[k][2] == 2) { 
+                        tmp++; 
+                        Map[k][2] = 0; // 즉시 베이스에서 제거
+                    }
+                    // 1루 주자는 3루로
+                    for(int k=1; k<=9; k++) if(Map[k][2] == 1) { Map[k][2] = 3; }
 
-                // 3. 타자를 처리한다.
-                if(hit == 4){ // 홈런인 경우 타자도 득점
-                    tmp++;
-                } else { // 안타인 경우 타자를 해당 베이스로 이동
-                    Map[taza][2] = hit;
+                    // 타자는 2루로
+                    Map[taza][2] = 2;
+                }
+                if(ening_map[i][Map[taza][1]]==3){ // 3루타
+                    // 모든 주자는 득점
+                    for(int k=1; k<=9; k++) {
+                        if(Map[k][2] > 0) {
+                            tmp++;
+                            Map[k][2] = 0;
+                        }
+                    }
+                    // 타자는 3루로
+                    Map[taza][2] = 3;
+                }
+                if(ening_map[i][Map[taza][1]]==4){
+                    for(int k=1;k<=9;k++){//1번타자 부터 흝고
+                        if(Map[k][2]!=0){// 경기장에 있으면
+                            Map[k][2]=0;
+                            tmp++;
+                        }
+                    }
+                    tmp++;//자기 자신 승점
+                }
+                if(ening_map[i][Map[taza][1]]==0){
+                    cnt++;
+                    if(cnt>=3) {
+                        break;
+                    }
                 }
             }
         }
+                //map[j][1]; !//j번타자 선수번호 
+                //ening_map[i][map[j][1]]; !//i이닝에서 j번 타자의 타점
+                // if(ening_map[i][Map[j][1]]==1){
+                //     for(int k=1;k<=9;k++){//1번타자 부터 흝고
+                //         if(Map[k][2]!=0){// 경기장에 있으면
+                //             Map[k][2]=Map[k][2]+1;
+                //             if((Map[k][2]+1)>=4){
+                //                 Map[k][2]=0;
+                //                 tmp++;
+                //             }
+                //         }
+                //     }
+                // }
         ans=max(ans,tmp);
+        //cout<<"fianl\n";
         return;
     }
 
