@@ -122,3 +122,6 @@ int main(){
     dfs(1);
     cout<<ans;
 }
+//1. cout<<으로 디버깅하다가 혼자 삽질함.. 
+//2.         if(depth+1==4) dfs(depth+2);
+//           else dfs(depth+1);                 depth 건너뛰기는 처음 경험.
