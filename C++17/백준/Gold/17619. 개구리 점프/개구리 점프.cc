@@ -1,3 +1,5 @@
+
+
 #include<bits/stdc++.h>
 using namespace std;
 
@@ -39,6 +41,8 @@ int n,q;
 
 
 int main(){
+    cin.tie(0);
+    ios::sync_with_stdio(0);
     cin>>n>>q;
     for(int i=0;i<n;i++){
         int a,b,c;
@@ -61,8 +65,8 @@ int main(){
         //파인드
         int A=find(a);
         int B=find(b);
-        if(A==B) cout<<1<<endl;
-        else cout<<0<<endl;
+        if(A==B) cout<<1<<'\n';
+        else cout<<0<<'\n';
     }
 }
 // 1. 커스텀 정렬
