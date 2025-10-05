@@ -9,11 +9,11 @@ vector<int> last;
 vector<int> v[1004];
 queue<int> q;
 vector<int> real_Prev;
-
 void fuc(int x){
     if(x==1) {
         return ;
     }
+    //cout<<x<<"방문이요\n";
     real_Prev.push_back(x);
     fuc(Prev[x]);
 }
@@ -26,21 +26,15 @@ int main(){
         cin>>a>>b>>c;
         score[a][b]=c;
         v[a].push_back(b);
-        if(b==1) {
-            last.push_back(a);
-        } else {
-            indegree[b]++;  // 1번이 아닐 때만 indegree 증가
-        }
+        if(b==1) last.push_back(a);
+        else indegree[b]++;//1의 indegree를 증가시키면 0인 경우가 두번 생겨서 문제가 생길 수 잇음
     }
-    
     q.push(1);
     while(!q.empty()){
         int cur=q.front();
         q.pop();
 
         for(auto next : v[cur]){
-            if(next == 1) continue;  // 1번으로 가는 간선은 나중에 처리
-            
             if(ans[next]<ans[cur]+score[cur][next]){
                 ans[next]=ans[cur]+score[cur][next];
                 Prev[next]=cur;
@@ -49,16 +43,14 @@ int main(){
             if(indegree[next]==0) q.push(next);
         }
     }
-    
     int real_score=0;
-    int real_index=1;  // 초기화
+    int real_index;
     for(auto ed: last){
         if(real_score<ans[ed]+score[ed][1]){
             real_score = ans[ed]+score[ed][1];
             real_index = ed;
         }
     }
-    
     cout<<real_score<<'\n';
     real_Prev.push_back(1);
     fuc(real_index);
@@ -66,4 +58,8 @@ int main(){
     for(int i=real_Prev.size()-1; i>=0 ;i--){
         cout<<real_Prev[i]<<" ";
     }
+    // for(auto qwer: real_Prev){
+    //     cout<<qwer<<" ";
+    // }
 }
+//dp + 사이클이 있다고 착각하기 쉽네(꼬았어)
